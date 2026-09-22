@@ -8,6 +8,7 @@ import EventosPage from './pages/EventosPage';
 import LoginPage from './pages/LoginPage';
 import ComunidadePage from './pages/ComunidadePage';
 import VideosPage from './pages/VideosPage';
+import AdminPage from './pages/AdminPage';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/comunidade" element={<ComunidadePage />} />
             <Route path="/videos" element={<VideosPage />} />
+            <Route path="/admin" element={<AdminPage />} />
           </Routes>
         </div>
       </Router>

@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { useApp } from '../contexts/AppContext';
-import { Heart, Search, Filter, Plus, X } from 'lucide-react';
+import { Heart, Search, Filter, Plus, X, Edit3, Trash2 } from 'lucide-react';
 
 export default function CardapioPage() {
-  const { menuItems, voteMenuItem, currentUser, addMenuItem } = useApp();
+  const { menuItems, voteMenuItem, currentUser, addMenuItem, updateMenuItem, deleteMenuItem } = useApp();
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('Todos');
   const [showAddForm, setShowAddForm] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const [newItem, setNewItem] = useState({ name: '', description: '', price: '', category: 'Porções', image: '🍽️' });
 
   const categories = ['Todos', ...Array.from(new Set(menuItems.map(i => i.category)))];
@@ -22,15 +24,45 @@ export default function CardapioPage() {
 
   const handleAdd = () => {
     if (!newItem.name || !newItem.price) return;
-    addMenuItem({
-      name: newItem.name,
-      description: newItem.description,
-      price: parseFloat(newItem.price),
-      category: newItem.category,
-      image: newItem.image
-    });
+    if (editingId) {
+      updateMenuItem(editingId, {
+        name: newItem.name,
+        description: newItem.description,
+        price: parseFloat(newItem.price),
+        category: newItem.category,
+        image: newItem.image
+      });
+      setEditingId(null);
+    } else {
+      addMenuItem({
+        name: newItem.name,
+        description: newItem.description,
+        price: parseFloat(newItem.price),
+        category: newItem.category,
+        image: newItem.image
+      });
+    }
     setNewItem({ name: '', description: '', price: '', category: 'Porções', image: '🍽️' });
     setShowAddForm(false);
+  };
+
+  const startEdit = (id: string) => {
+    const item = menuItems.find(i => i.id === id);
+    if (!item) return;
+    setNewItem({
+      name: item.name,
+      description: item.description,
+      price: item.price.toString(),
+      category: item.category,
+      image: item.image
+    });
+    setEditingId(id);
+    setShowAddForm(true);
+  };
+
+  const handleDelete = (id: string) => {
+    deleteMenuItem(id);
+    setConfirmDeleteId(null);
   };
 
   return (
@@ -82,8 +114,8 @@ export default function CardapioPage() {
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
             <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl">
               <div className="flex justify-between items-center mb-4">
-                <h3 className="text-xl font-bold">Adicionar Item ao Cardápio</h3>
-                <button onClick={() => setShowAddForm(false)} className="p-1 hover:bg-gray-100 rounded"><X size={20} /></button>
+                <h3 className="text-xl font-bold">{editingId ? 'Editar Item' : 'Adicionar Item ao Cardápio'}</h3>
+                <button onClick={() => { setShowAddForm(false); setEditingId(null); }} className="p-1 hover:bg-gray-100 rounded"><X size={20} /></button>
               </div>
               <div className="space-y-3">
                 <div>
@@ -108,7 +140,7 @@ export default function CardapioPage() {
                   <option>Porções</option><option>Pratos</option><option>Bebidas</option><option>Sobremesas</option>
                 </select>
                 <button onClick={handleAdd} className="w-full bg-green-600 text-white py-3 rounded-xl font-bold hover:bg-green-700 transition">
-                  Adicionar ao Cardápio
+                  {editingId ? 'Salvar Alterações' : 'Adicionar ao Cardápio'}
                 </button>
               </div>
             </div>
@@ -127,9 +159,21 @@ export default function CardapioPage() {
                 <div className="p-4">
                   <div className="flex items-start justify-between">
                     <h3 className="font-bold text-gray-800 text-lg">{item.name}</h3>
-                    <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium whitespace-nowrap ml-2">
-                      {item.category}
-                    </span>
+                    <div className="flex items-center gap-1">
+                      {currentUser?.isAdmin && (
+                        <>
+                          <button onClick={() => startEdit(item.id)} className="p-1.5 text-blue-500 hover:bg-blue-50 rounded-lg transition" title="Editar">
+                            <Edit3 size={14} />
+                          </button>
+                          <button onClick={() => setConfirmDeleteId(item.id)} className="p-1.5 text-red-500 hover:bg-red-50 rounded-lg transition" title="Excluir">
+                            <Trash2 size={14} />
+                          </button>
+                        </>
+                      )}
+                      <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium whitespace-nowrap ml-1">
+                        {item.category}
+                      </span>
+                    </div>
                   </div>
                   <p className="text-sm text-gray-500 mt-1 line-clamp-2">{item.description}</p>
                   <div className="flex items-center justify-between mt-4">
@@ -161,6 +205,33 @@ export default function CardapioPage() {
           </div>
         )}
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {confirmDeleteId && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-sm shadow-2xl">
+            <div className="text-center">
+              <div className="bg-red-100 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Trash2 size={24} className="text-red-600" />
+              </div>
+              <h3 className="text-lg font-bold text-gray-800 mb-2">Excluir Item</h3>
+              <p className="text-sm text-gray-500 mb-6">
+                Tem certeza que deseja excluir <strong>{menuItems.find(i => i.id === confirmDeleteId)?.name}</strong>?
+              </p>
+              <div className="flex gap-3">
+                <button onClick={() => setConfirmDeleteId(null)}
+                  className="flex-1 px-4 py-2.5 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 transition font-medium text-sm">
+                  Cancelar
+                </button>
+                <button onClick={() => handleDelete(confirmDeleteId)}
+                  className="flex-1 px-4 py-2.5 rounded-lg bg-red-600 text-white hover:bg-red-700 transition font-medium text-sm">
+                  Excluir
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

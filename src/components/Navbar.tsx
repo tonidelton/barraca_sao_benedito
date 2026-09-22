@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useApp } from '../contexts/AppContext';
-import { Menu, X, Home, UtensilsCrossed, Calendar, MessageCircle, Video, User, LogOut, LogIn } from 'lucide-react';
+import { Menu, X, Home, UtensilsCrossed, Calendar, MessageCircle, Video, User, LogOut, LogIn, Shield } from 'lucide-react';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -46,6 +46,12 @@ export default function Navbar() {
           <div className="hidden md:flex items-center gap-3">
             {currentUser ? (
               <div className="flex items-center gap-3">
+                {currentUser.isAdmin && (
+                  <Link to="/admin" className="flex items-center gap-1.5 bg-yellow-400/20 border border-yellow-300/30 text-yellow-100 px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-yellow-400/30 transition">
+                    <Shield size={16} />
+                    Admin
+                  </Link>
+                )}
                 <div className="flex items-center gap-2 bg-white/10 rounded-full px-3 py-1.5">
                   <span className="text-lg">{currentUser.avatar}</span>
                   <span className="text-sm font-medium">{currentUser.name}</span>
@@ -89,15 +95,23 @@ export default function Navbar() {
             ))}
             <div className="border-t border-white/10 pt-2 mt-2">
               {currentUser ? (
-                <div className="flex items-center justify-between px-3 py-2">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xl">{currentUser.avatar}</span>
-                    <span className="font-medium">{currentUser.name}</span>
+                <>
+                  {currentUser.isAdmin && (
+                    <Link to="/admin" onClick={() => setIsOpen(false)}
+                      className="flex items-center gap-2 px-3 py-2.5 rounded-lg bg-yellow-400/20 border border-yellow-300/30 text-yellow-100 font-medium text-sm mb-2">
+                      <Shield size={18} /> Painel Admin
+                    </Link>
+                  )}
+                  <div className="flex items-center justify-between px-3 py-2">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xl">{currentUser.avatar}</span>
+                      <span className="font-medium">{currentUser.name}</span>
+                    </div>
+                    <button onClick={logout} className="flex items-center gap-1 text-sm text-red-200 hover:text-red-100">
+                      <LogOut size={16} /> Sair
+                    </button>
                   </div>
-                  <button onClick={logout} className="flex items-center gap-1 text-sm text-red-200 hover:text-red-100">
-                    <LogOut size={16} /> Sair
-                  </button>
-                </div>
+                </>
               ) : (
                 <Link to="/login" onClick={() => setIsOpen(false)} className="flex items-center gap-2 px-3 py-2.5 rounded-lg hover:bg-white/10">
                   <User size={20} /> Entrar / Cadastrar

@@ -71,6 +71,13 @@ interface AppContextType {
   likeVideo: (videoId: string) => void;
   addMenuItem: (item: Omit<MenuItem, 'id' | 'votes' | 'voters'>) => void;
   addEvent: (event: Omit<Event, 'id' | 'votes' | 'voters'>) => void;
+  updateMenuItem: (id: string, item: Partial<MenuItem>) => void;
+  deleteMenuItem: (id: string) => void;
+  updateEvent: (id: string, event: Partial<Event>) => void;
+  deleteEvent: (id: string) => void;
+  deleteVideo: (id: string) => void;
+  deleteMessage: (id: string) => void;
+  broadcastMessage: (content: string) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -238,11 +245,51 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setEvents(prev => [...prev, newEvent]);
   };
 
+  const updateMenuItem = (id: string, item: Partial<MenuItem>) => {
+    setMenuItems(prev => prev.map(mi => mi.id === id ? { ...mi, ...item } : mi));
+  };
+
+  const deleteMenuItem = (id: string) => {
+    setMenuItems(prev => prev.filter(mi => mi.id !== id));
+  };
+
+  const updateEvent = (id: string, event: Partial<Event>) => {
+    setEvents(prev => prev.map(ev => ev.id === id ? { ...ev, ...event } : ev));
+  };
+
+  const deleteEvent = (id: string) => {
+    setEvents(prev => prev.filter(ev => ev.id !== id));
+  };
+
+  const deleteVideo = (id: string) => {
+    setVideos(prev => prev.filter(v => v.id !== id));
+  };
+
+  const deleteMessage = (id: string) => {
+    setMessages(prev => prev.filter(m => m.id !== id));
+  };
+
+  const broadcastMessage = (content: string) => {
+    if (!currentUser?.isAdmin) return;
+    const newMsg: Message = {
+      id: Date.now().toString(),
+      userId: currentUser.id,
+      userName: currentUser.name,
+      userAvatar: currentUser.avatar,
+      content: `📢 ${content}`,
+      timestamp: new Date().toISOString(),
+      isAdmin: true
+    };
+    setMessages(prev => [...prev, newMsg]);
+  };
+
   return (
     <AppContext.Provider value={{
       currentUser, users, menuItems, events, messages, videos,
       login, register, logout, voteMenuItem, voteEvent,
-      addMessage, addVideo, likeVideo, addMenuItem, addEvent
+      addMessage, addVideo, likeVideo, addMenuItem, addEvent,
+      updateMenuItem, deleteMenuItem, updateEvent, deleteEvent,
+      deleteVideo, deleteMessage, broadcastMessage
     }}>
       {children}
     </AppContext.Provider>

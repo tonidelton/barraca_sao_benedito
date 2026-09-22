@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { useApp } from '../contexts/AppContext';
-import { Heart, Calendar, Clock, Plus, X } from 'lucide-react';
+import { Heart, Calendar, Clock, Plus, X, Edit3, Trash2 } from 'lucide-react';
 
 export default function EventosPage() {
-  const { events, voteEvent, currentUser, addEvent } = useApp();
+  const { events, voteEvent, currentUser, addEvent, updateEvent, deleteEvent } = useApp();
   const [showAddForm, setShowAddForm] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const [newEvent, setNewEvent] = useState({ title: '', description: '', date: '', time: '', image: '🎉' });
 
   const emojis = ['🎵', '🍻', '🃏', '🏖️', '🎉', '🎸', '🎤', '🎭', '🎪', '🌅', '🎆', '🍖', '🎂', '🏄', '⚽'];
@@ -12,9 +14,33 @@ export default function EventosPage() {
 
   const handleAdd = () => {
     if (!newEvent.title || !newEvent.date || !newEvent.time) return;
-    addEvent({ ...newEvent });
+    if (editingId) {
+      updateEvent(editingId, { ...newEvent });
+      setEditingId(null);
+    } else {
+      addEvent({ ...newEvent });
+    }
     setNewEvent({ title: '', description: '', date: '', time: '', image: '🎉' });
     setShowAddForm(false);
+  };
+
+  const startEdit = (id: string) => {
+    const event = events.find(e => e.id === id);
+    if (!event) return;
+    setNewEvent({
+      title: event.title,
+      description: event.description,
+      date: event.date,
+      time: event.time,
+      image: event.image
+    });
+    setEditingId(id);
+    setShowAddForm(true);
+  };
+
+  const handleDelete = (id: string) => {
+    deleteEvent(id);
+    setConfirmDeleteId(null);
   };
 
   return (
@@ -45,8 +71,8 @@ export default function EventosPage() {
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
             <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl">
               <div className="flex justify-between items-center mb-4">
-                <h3 className="text-xl font-bold">Criar Novo Evento</h3>
-                <button onClick={() => setShowAddForm(false)} className="p-1 hover:bg-gray-100 rounded"><X size={20} /></button>
+                <h3 className="text-xl font-bold">{editingId ? 'Editar Evento' : 'Criar Novo Evento'}</h3>
+                <button onClick={() => { setShowAddForm(false); setEditingId(null); }} className="p-1 hover:bg-gray-100 rounded"><X size={20} /></button>
               </div>
               <div className="space-y-3">
                 <div>
@@ -77,7 +103,7 @@ export default function EventosPage() {
                   </div>
                 </div>
                 <button onClick={handleAdd} className="w-full bg-purple-600 text-white py-3 rounded-xl font-bold hover:bg-purple-700 transition">
-                  Criar Evento
+                  {editingId ? 'Salvar Alterações' : 'Criar Evento'}
                 </button>
               </div>
             </div>
@@ -98,7 +124,19 @@ export default function EventosPage() {
                 <div className="p-6">
                   <div className="flex items-start justify-between">
                     <h3 className="font-bold text-xl text-gray-800">{event.title}</h3>
-                    {isPast && <span className="text-xs bg-gray-200 text-gray-600 px-2 py-0.5 rounded-full">Encerrado</span>}
+                    <div className="flex items-center gap-1">
+                      {currentUser?.isAdmin && (
+                        <>
+                          <button onClick={() => startEdit(event.id)} className="p-1.5 text-blue-500 hover:bg-blue-50 rounded-lg transition" title="Editar">
+                            <Edit3 size={14} />
+                          </button>
+                          <button onClick={() => setConfirmDeleteId(event.id)} className="p-1.5 text-red-500 hover:bg-red-50 rounded-lg transition" title="Excluir">
+                            <Trash2 size={14} />
+                          </button>
+                        </>
+                      )}
+                      {isPast && <span className="text-xs bg-gray-200 text-gray-600 px-2 py-0.5 rounded-full">Encerrado</span>}
+                    </div>
                   </div>
                   <p className="text-gray-500 mt-2">{event.description}</p>
                   <div className="flex flex-wrap items-center gap-4 mt-4 text-sm">
@@ -143,6 +181,33 @@ export default function EventosPage() {
           </div>
         )}
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {confirmDeleteId && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-sm shadow-2xl">
+            <div className="text-center">
+              <div className="bg-red-100 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Trash2 size={24} className="text-red-600" />
+              </div>
+              <h3 className="text-lg font-bold text-gray-800 mb-2">Excluir Evento</h3>
+              <p className="text-sm text-gray-500 mb-6">
+                Tem certeza que deseja excluir <strong>{events.find(e => e.id === confirmDeleteId)?.title}</strong>?
+              </p>
+              <div className="flex gap-3">
+                <button onClick={() => setConfirmDeleteId(null)}
+                  className="flex-1 px-4 py-2.5 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 transition font-medium text-sm">
+                  Cancelar
+                </button>
+                <button onClick={() => handleDelete(confirmDeleteId)}
+                  className="flex-1 px-4 py-2.5 rounded-lg bg-red-600 text-white hover:bg-red-700 transition font-medium text-sm">
+                  Excluir
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
