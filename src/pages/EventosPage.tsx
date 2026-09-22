@@ -23,7 +23,8 @@ export default function EventosPage() {
       <div className="bg-gradient-to-r from-purple-600 to-indigo-500 text-white py-12">
         <div className="max-w-7xl mx-auto px-4">
           <h1 className="text-3xl md:text-4xl font-bold mb-2">📅 Programação de Eventos</h1>
-          <p className="text-purple-100">Vote nos eventos que você quer ver! Os mais votados ganham prioridade.</p>
+          <p className="text-purple-100">Barraca de São Benedito - Extrema - MG</p>
+          <p className="text-purple-200 text-sm mt-1">Vote nos eventos que você quer ver! Os mais votados ganham prioridade.</p>
         </div>
       </div>
 

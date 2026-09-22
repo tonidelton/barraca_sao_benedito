@@ -23,7 +23,8 @@ export default function VideosPage() {
       <div className="bg-gradient-to-r from-pink-600 to-rose-500 text-white py-12">
         <div className="max-w-7xl mx-auto px-4">
           <h1 className="text-3xl md:text-4xl font-bold mb-2">🎬 Vídeos Curtos</h1>
-          <p className="text-pink-100">Compartilhe e assista momentos especiais da Barraca do Sabor!</p>
+          <p className="text-pink-100">Barraca de São Benedito - Extrema - MG</p>
+          <p className="text-pink-200 text-sm mt-1">Compartilhe e assista momentos especiais da nossa barraca!</p>
         </div>
       </div>
 

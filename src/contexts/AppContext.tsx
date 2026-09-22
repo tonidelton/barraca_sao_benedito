@@ -94,7 +94,7 @@ const defaultEvents: Event[] = [
 ];
 
 const defaultMessages: Message[] = [
-  { id: '1', userId: 'admin', userName: 'Admin', userAvatar: '👨‍💼', content: 'Bem-vindos à Barraca do Sabor! 🎉 Novos pratos no cardápio essa semana!', timestamp: '2026-02-10T10:00:00', isAdmin: true },
+  { id: '1', userId: 'admin', userName: 'Admin', userAvatar: '👨‍💼', content: 'Bem-vindos à Barraca de São Benedito! 🎉 Novos pratos no cardápio essa semana! 📍 Extrema - MG', timestamp: '2026-02-10T10:00:00', isAdmin: true },
   { id: '2', userId: '2', userName: 'Maria', userAvatar: '👩', content: 'A caipirinha de lá está incrível! Super recomendo!', timestamp: '2026-02-10T11:30:00', isAdmin: false },
   { id: '3', userId: '3', userName: 'João', userAvatar: '👨', content: 'Alguém vai no luau de sábado?', timestamp: '2026-02-10T14:00:00', isAdmin: false },
 ];
@@ -114,7 +114,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [users, setUsers] = useState<User[]>(() => {
     const saved = localStorage.getItem('users');
     return saved ? JSON.parse(saved) : [
-      { id: 'admin', name: 'Admin', email: 'admin@barraca.com', password: 'admin123', avatar: '👨‍💼', isAdmin: true, createdAt: '2026-01-01' }
+      { id: 'admin', name: 'Admin', email: 'admin@saobenedito.com', password: 'admin123', avatar: '👨‍💼', isAdmin: true, createdAt: '2026-01-01' }
     ];
   });
 

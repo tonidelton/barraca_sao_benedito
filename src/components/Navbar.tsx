@@ -24,7 +24,7 @@ export default function Navbar() {
         <div className="flex justify-between items-center h-16">
           <Link to="/" className="flex items-center gap-2 font-bold text-xl">
             <span className="text-3xl">🏖️</span>
-            <span className="hidden sm:inline">Barraca do Sabor</span>
+            <span className="hidden sm:inline">Barraca de São Benedito</span>
           </Link>
 
           {/* Desktop */}

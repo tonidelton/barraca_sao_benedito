@@ -39,7 +39,8 @@ export default function ComunidadePage() {
       <div className="bg-gradient-to-r from-blue-600 to-cyan-500 text-white py-8">
         <div className="max-w-4xl mx-auto px-4">
           <h1 className="text-3xl md:text-4xl font-bold mb-2">💬 Comunidade</h1>
-          <p className="text-blue-100">Converse com outros frequentadores e fique por dentro das novidades!</p>
+          <p className="text-blue-100">Barraca de São Benedito - Extrema - MG</p>
+          <p className="text-blue-200 text-sm mt-1">Converse com outros frequentadores e fique por dentro das novidades!</p>
         </div>
       </div>
 

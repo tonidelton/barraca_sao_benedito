@@ -22,10 +22,11 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 py-20 md:py-32 relative z-10">
           <div className="text-center max-w-3xl mx-auto">
             <h1 className="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">
-              🏖️ Barraca do Sabor
+              🏖️ Barraca de São Benedito
             </h1>
+            <p className="text-sm md:text-base text-amber-200 mb-2 font-medium">📍 Extrema - MG</p>
             <p className="text-xl md:text-2xl text-amber-100 mb-8">
-              O melhor da gastronomia de praia com eventos incríveis! Vote nos seus pratos e eventos favoritos.
+              O melhor da gastronomia com eventos incríveis! Vote nos seus pratos e eventos favoritos.
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
               <Link to="/cardapio" className="bg-white text-amber-700 font-bold px-8 py-3 rounded-full hover:bg-amber-50 transition shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
@@ -160,9 +161,9 @@ export default function HomePage() {
       <footer className="bg-gray-900 text-gray-400 py-10">
         <div className="max-w-7xl mx-auto px-4 text-center">
           <p className="text-2xl mb-2">🏖️</p>
-          <p className="font-bold text-white text-lg">Barraca do Sabor</p>
-          <p className="text-sm mt-2">O melhor da gastronomia de praia</p>
-          <p className="text-xs mt-4">© 2026 Barraca do Sabor. Todos os direitos reservados.</p>
+          <p className="font-bold text-white text-lg">Barraca de São Benedito</p>
+          <p className="text-sm mt-2">📍 Extrema - MG</p>
+          <p className="text-xs mt-4">© 2026 Barraca de São Benedito - Extrema - MG. Todos os direitos reservados.</p>
         </div>
       </footer>
     </div>

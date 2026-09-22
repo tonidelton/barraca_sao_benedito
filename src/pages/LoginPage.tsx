@@ -48,8 +48,9 @@ export default function LoginPage() {
         {/* Logo */}
         <div className="text-center mb-8">
           <span className="text-6xl">🏖️</span>
-          <h1 className="text-2xl font-bold text-gray-800 mt-3">Barraca do Sabor</h1>
-          <p className="text-gray-500 mt-1">{isLogin ? 'Entre na sua conta' : 'Crie sua conta'}</p>
+          <h1 className="text-2xl font-bold text-gray-800 mt-3">Barraca de São Benedito</h1>
+          <p className="text-sm text-gray-500 mt-1">📍 Extrema - MG</p>
+          <p className="text-gray-500 mt-2">{isLogin ? 'Entre na sua conta' : 'Crie sua conta'}</p>
         </div>
 
         {/* Form Card */}
@@ -134,7 +135,7 @@ export default function LoginPage() {
           {isLogin && (
             <div className="mt-6 p-4 bg-amber-50 rounded-xl border border-amber-100">
               <p className="text-xs text-amber-700 font-medium mb-1">🔑 Conta de teste (Admin):</p>
-              <p className="text-xs text-amber-600">Email: admin@barraca.com</p>
+              <p className="text-xs text-amber-600">Email: admin@saobenedito.com</p>
               <p className="text-xs text-amber-600">Senha: admin123</p>
             </div>
           )}

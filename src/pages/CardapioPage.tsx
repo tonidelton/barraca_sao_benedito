@@ -39,7 +39,8 @@ export default function CardapioPage() {
       <div className="bg-gradient-to-r from-green-600 to-emerald-500 text-white py-12">
         <div className="max-w-7xl mx-auto px-4">
           <h1 className="text-3xl md:text-4xl font-bold mb-2">🍽️ Cardápio Virtual</h1>
-          <p className="text-green-100">Vote nos seus pratos favoritos e ajude a montar nosso menu!</p>
+          <p className="text-green-100">Barraca de São Benedito - Extrema - MG</p>
+          <p className="text-green-200 text-sm mt-1">Vote nos seus pratos favoritos e ajude a montar nosso menu!</p>
         </div>
       </div>
 
